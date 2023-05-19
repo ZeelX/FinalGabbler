@@ -1,0 +1,10 @@
+parameters:
+  hash: $2y$10$Z/3YPNAM8HZSa3iOAWd0KucXna9/P45uTLcCALswxZO/VhbeeTVGy
+
+App\Entity\User:
+  user{1..100}:
+    email: '<email()>'
+    roles: '[ROLE_USER]'
+    password: <{hash}>
+    isVerified: '1'
+
