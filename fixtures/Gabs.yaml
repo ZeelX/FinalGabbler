@@ -2,11 +2,14 @@ App\Entity\Gabs:
   gabs1{1..50}:
     message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent viverra a purus at pretium. Duis id tellus turpis. Aliquam erat volutpat. Nunc porta consectetur tincidunt. Maecenas pellentesque semper sem sed vestibulum. Phasellus ultrices, nisl ut. '
     author: '@user*'
+    createdAt: <dateTimeBetween('2000-01-01', '2023-05-15')>
 
   gabs2{1..50}:
     message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent varius scelerisque nibh sed sollicitudin. Donec non dignissim ligula. Integer sed aliquet eros. Proin in leo mi.'
     author: '@user*'
+    createdAt: <dateTimeBetween('2000-01-01', '2023-05-15')>
 
   gabs3{1..50}:
     message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent varius scelerisque nibh sed sollicitudin. Donec non dignissim ligula.'
     author: '@user*'
+    createdAt: <dateTimeBetween('2000-01-01', '2023-05-15')>
