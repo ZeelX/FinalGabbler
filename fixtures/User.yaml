@@ -3,6 +3,7 @@ parameters:
 
 App\Entity\User:
   user{1..100}:
+    name: '<firstname()>'
     email: '<email()>'
     roles: '[ROLE_USER]'
     password: <{hash}>

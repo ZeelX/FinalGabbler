@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\GabsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,12 +19,20 @@ class Gabs
     #[ORM\Column(length: 255)]
     private ?string $message = null;
 
-    #[ORM\ManyToOne(inversedBy: 'gabsList')]
+    #[ORM\ManyToOne(targetEntity: User::class,inversedBy: 'gabsList')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\OneToMany(mappedBy: 'gabsRef', targetEntity: UserLike::class)]
+    private Collection $userLikes;
+
+    public function __construct()
+    {
+        $this->userLikes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -61,6 +71,36 @@ class Gabs
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserLike>
+     */
+    public function getUserLikes(): Collection
+    {
+        return $this->userLikes;
+    }
+
+    public function addUserLike(UserLike $userLike): self
+    {
+        if (!$this->userLikes->contains($userLike)) {
+            $this->userLikes->add($userLike);
+            $userLike->setGabsRef($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLike(UserLike $userLike): self
+    {
+        if ($this->userLikes->removeElement($userLike)) {
+            // set the owning side to null (unless already changed)
+            if ($userLike->getGabsRef() === $this) {
+                $userLike->setGabsRef(null);
+            }
+        }
 
         return $this;
     }

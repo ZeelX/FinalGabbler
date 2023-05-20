@@ -40,9 +40,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserLike::class)]
+    private Collection $userLikes;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
     public function __construct()
     {
         $this->gabsList = new ArrayCollection();
+        $this->userLikes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -167,5 +174,51 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->avatar = $avatar;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, UserLike>
+     */
+    public function getUserLikes(): Collection
+    {
+        return $this->userLikes;
+    }
+
+    public function addUserLike(UserLike $userLike): self
+    {
+        if (!$this->userLikes->contains($userLike)) {
+            $this->userLikes->add($userLike);
+            $userLike->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLike(UserLike $userLike): self
+    {
+        if ($this->userLikes->removeElement($userLike)) {
+            // set the owning side to null (unless already changed)
+            if ($userLike->getUser() === $this) {
+                $userLike->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function __toString(){
+        return $this->getName();
     }
 }

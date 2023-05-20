@@ -24,14 +24,17 @@ class GabsController extends AbstractController
     #[Route('/new', name: 'app_gabs_new', methods: ['GET', 'POST'])]
     public function new(Request $request, GabsRepository $gabsRepository): Response
     {
+        $currentUser = $this->getUser();
+
         $gab = new Gabs();
+        $gab->setAuthor($this->getUser());
+        $gab->setCreatedAt(new \DateTime('now'));
         $form = $this->createForm(GabsType::class, $gab);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $gabsRepository->save($gab, true);
 
-            return $this->redirectToRoute('app_gabs_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('gabs/new.html.twig', [
@@ -40,31 +43,6 @@ class GabsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_gabs_show', methods: ['GET'])]
-    public function show(Gabs $gab): Response
-    {
-        return $this->render('gabs/show.html.twig', [
-            'gab' => $gab,
-        ]);
-    }
-
-    #[Route('/{id}/edit', name: 'app_gabs_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Gabs $gab, GabsRepository $gabsRepository): Response
-    {
-        $form = $this->createForm(GabsType::class, $gab);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $gabsRepository->save($gab, true);
-
-            return $this->redirectToRoute('app_gabs_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('gabs/edit.html.twig', [
-            'gab' => $gab,
-            'form' => $form,
-        ]);
-    }
 
     #[Route('/{id}', name: 'app_gabs_delete', methods: ['POST'])]
     public function delete(Request $request, Gabs $gab, GabsRepository $gabsRepository): Response

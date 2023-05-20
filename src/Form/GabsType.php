@@ -13,14 +13,13 @@ class GabsType extends AbstractType
     {
         $builder
             ->add('message')
-            ->add('author')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Gabs::class,
+            'data_class' => Gabs::class
         ]);
     }
 }
