@@ -54,13 +54,14 @@ class UserLikeRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?UserLike
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findOneByIds($gabsId,$authorId): ?UserLike
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.gabsRef = :valOne')
+            ->andWhere('u.user = :valTwo')
+            ->setParameters(['valOne' => $gabsId, 'valTwo' => $authorId])
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 }

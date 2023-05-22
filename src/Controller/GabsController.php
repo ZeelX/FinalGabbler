@@ -44,6 +44,7 @@ class GabsController extends AbstractController
     }
 
 
+
     #[Route('/{id}', name: 'app_gabs_delete', methods: ['POST'])]
     public function delete(Request $request, Gabs $gab, GabsRepository $gabsRepository): Response
     {

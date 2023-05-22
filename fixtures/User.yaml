@@ -8,4 +8,5 @@ App\Entity\User:
     roles: '[ROLE_USER]'
     password: <{hash}>
     isVerified: '1'
+    avatar: 'images/imgLambda.jpg'
 
