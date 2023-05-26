@@ -15,20 +15,23 @@ use Symfony\Component\Routing\Annotation\Route;
 class LikeController extends AbstractController
 {
     #[Route('/newLike/{id}/{value}', name: 'app_new_like', methods: ['GET'])]
-    public function newLike(Request $request, GabsRepository $gabs, UserLikeRepository $ur, EntityManagerInterface $em, array $_route_params): Response
-    {
+    public function newLike(Request $request, Gabs $g, GabsRepository $gr, UserLikeRepository $ur, EntityManagerInterface $em, array $_route_params): Response
 
+    {
+        $currentGabs = $gr->findOneById($_route_params['id']);
         $objectSearched = $ur->findOneByIds($_route_params['id'], $this->getUser()->getId());
         if ($objectSearched == true) {
             $em->remove($objectSearched);
             $em->flush();
+
         }
 
         $like = new UserLike();
         $like->setUser($this->getUser());
-        $like->setGabsRef($gabs->findOneById($_route_params['id']));
+        $like->setGabsRef($currentGabs);
         $like->setValue($_route_params['value']);
         $ur->save($like, true);
+
         return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
 
     }

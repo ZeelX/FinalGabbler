@@ -29,6 +29,9 @@ class Gabs
     #[ORM\OneToMany(mappedBy: 'gabsRef', targetEntity: UserLike::class)]
     private Collection $userLikes;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $gabsInteraction = null;
+
     public function __construct()
     {
         $this->userLikes = new ArrayCollection();
@@ -101,6 +104,18 @@ class Gabs
                 $userLike->setGabsRef(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getGabsInteraction(): ?int
+    {
+        return $this->gabsInteraction;
+    }
+
+    public function setGabsInteraction(?int $gabsInteraction): self
+    {
+        $this->gabsInteraction = $gabsInteraction;
 
         return $this;
     }

@@ -6,19 +6,38 @@
     <div class="row">
         <div class="col-3">
             <h1>Mon profil</h1>
+            {% if app.user.isPremium == true %}
+                <a class="btn btn-warning" href="{{ path('app_edit_profil', {'id': me }) }}"> modifier mon profil </a>
+            {% else %}
+                <a class="btn btn-warning" href="{{ path('app_user_shop') }}"> modifier mon profil</a>
+            {% endif %}
+
         </div>
-        <div class="offset-7 col-2">
-            <a class="btn" href="#"> Modify profil </a>
-{#            <a class="btn" href="{{  {{ path('app_modify_profil', {'id': profil.id}) }} }}"> modify profil </a>#}
+        <div class="offset-3 col-1">
+            <a class="btn btn-success" href="{{ path('app_profil', {'value': 1}) }}"> date Desc </a>
+        </div>
+        <div class="col-1">
+            <a class="btn btn-success" href="{{ path('app_profil', {'value': 2}) }}"> date asc </a>
+        </div>
+        <div class="col-1">
+            <a class="btn btn-success" href="{{ path('app_profil', {'value': 3}) }}"> like Desc </a>
+        </div>
+        <div class="col-1">
+            <a class="btn btn-success" href="{{ path('app_profil', {'value': 4}) }}"> like asc </a>
+        </div>
+        <div class="col-1">
+            <a class="btn btn-success" href="{{ path('app_profil', {'value': 5}) }}"> dislike Desc </a>
+        </div>
+        <div class="col-1">
+            <a class="btn btn-success" href="{{ path('app_profil', {'value': 5}) }}"> dislike asc </a>
         </div>
     </div>
-
 
     <div class="container mt-5">
         <div class="row">
             <div class="col-4">
                 <div class="row m-5 border">
-                    <img  src="{{ asset('build/images/imgLambda.jpg') }}" alt="Photo de profil"/>
+                    <img src="{{ asset('build/images/imgLambda.jpg') }}" alt="Photo de profil"/>
                 </div>
                 <div class="row justify-content-center">
                     {{ profil.name }}
@@ -26,9 +45,22 @@
                 <div class="row justify-content-center">
                     {{ profil.email }}
                 </div>
+                <div class="row justify-content-center">
+                    {% for followed in allfollowed %}
+                        <div class="row">
+                            {{ followed.name }}
+                        </div>
+
+                    {% else %}
+                        <div class="row">
+                            <p>You don't follow anybody !</p>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
             <div class="col-8">
                 {% for gab in gabs %}
+
                     <div class="row">
                         <div class="offset-2 col-8">
 
@@ -36,9 +68,11 @@
                                 <div class="card-body">
                                     <h5 class="card-title">{{ gab.author }}</h5>
                                     <p class="card-text">{{ gab.message }}</p>
-                                    <div class="text-end" >
-                                        <a href="{{ path('app_new_like', {'id': gab.id,'value': 1}) }}" class="btn btn-primary">like</a>
-                                        <a href="{{ path('app_new_like', {'id': gab.id,'value': 2}) }}" class="btn btn-primary">dislike</a>
+
+                                    <div class="text-end">
+                                        <p class="card-text">{{ gab.createdAt|date('Y-m-d') }}</p>
+                                        {# <a href="{{ path('app_new_like', {'id': gab.id,'value': 1}) }}" class="btn btn-primary">like</a> #}
+                                        {# <a href="{{ path('app_new_like', {'id': gab.id,'value': 2}) }}" class="btn btn-primary">dislike</a> #}
                                     </div>
                                 </div>
                             </div>

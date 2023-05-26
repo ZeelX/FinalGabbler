@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -28,7 +29,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
+    #[ORM\Column (nullable: true)]
     private ?string $password = null;
 
     #[ORM\Column(type: 'boolean')]
@@ -43,13 +44,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserLike::class)]
     private Collection $userLikes;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
+
+    #[ORM\OneToMany(mappedBy: 'listOwner', targetEntity: UserInteraction::class)]
+    private Collection $userInteractions;
+
+    #[ORM\Column]
+    private ?bool $isPremium = false;
+
+    #[ORM\Column]
+    private ?bool $isPrivate = false;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $dateStartSubscription = null;
 
     public function __construct()
     {
         $this->gabsList = new ArrayCollection();
         $this->userLikes = new ArrayCollection();
+        $this->userInteractions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -220,5 +234,71 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __toString(){
         return $this->getName();
+    }
+
+    /**
+     * @return Collection<int, UserInteraction>
+     */
+    public function getUserInteractions(): Collection
+    {
+        return $this->userInteractions;
+    }
+
+    public function addUserInteraction(UserInteraction $userInteraction): self
+    {
+        if (!$this->userInteractions->contains($userInteraction)) {
+            $this->userInteractions->add($userInteraction);
+            $userInteraction->setListOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserInteraction(UserInteraction $userInteraction): self
+    {
+        if ($this->userInteractions->removeElement($userInteraction)) {
+            // set the owning side to null (unless already changed)
+            if ($userInteraction->getListOwner() === $this) {
+                $userInteraction->setListOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isIsPremium(): ?bool
+    {
+        return $this->isPremium;
+    }
+
+    public function setIsPremium(bool $isPremium): self
+    {
+        $this->isPremium = $isPremium;
+
+        return $this;
+    }
+
+    public function isIsPrivate(): ?bool
+    {
+        return $this->isPrivate;
+    }
+
+    public function setIsPrivate(bool $isPrivate): self
+    {
+        $this->isPrivate = $isPrivate;
+
+        return $this;
+    }
+
+    public function getDateStartSubscription(): ?\DateTimeInterface
+    {
+        return $this->dateStartSubscription;
+    }
+
+    public function setDateStartSubscription(?\DateTimeInterface $dateStartSubscription): self
+    {
+        $this->dateStartSubscription = $dateStartSubscription;
+
+        return $this;
     }
 }

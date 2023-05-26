@@ -2,15 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\ConfirmMailToken;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
+use App\Services\tokenGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,15 +25,16 @@ class RegistrationController extends AbstractController
 {
     private EmailVerifier $emailVerifier;
 
-    public function __construct(EmailVerifier $emailVerifier)
+    public function __construct(EmailVerifier $emailVerifier, MailerInterface $mailer)
     {
         $this->emailVerifier = $emailVerifier;
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request,tokenGenerator $tokenGenerator, MailerInterface $mailer, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
+
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
@@ -46,15 +50,26 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $token = $tokenGenerator->generateToken();
+            $newToken = new ConfirmMailToken();
+            $newToken->setToken($token);
+            $newToken->setRelation($user);
+
+            $entityManager->persist($newToken);
+            $entityManager->flush();
+
+
+//             generate a signed url and email it to the user
+              $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
-                    ->from(new Address('leo.lourenco-sanchez@hesias.fr', 'Gabbler\'s team'))
+                    ->from(new Address('bde.aerid@gmail.com', 'Gabbler\'s team'))
                     ->to($user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
+                    ->context(['token' => $token])
             );
             // do anything else you need here, like send an email
+
 
             return $this->redirectToRoute('app_home');
         }
@@ -93,4 +108,5 @@ class RegistrationController extends AbstractController
 
         return $this->redirectToRoute('app_register');
     }
+
 }

@@ -19,15 +19,28 @@
                         <a href=" {{ path('app_user_profil', {'id': gab.author.id}) }}">
                             <h5 class="card-title">
                                 <img class="w-25" src="{{ asset('build/images/imgLambda.jpg') }}"
-                                                        alt="Photo de profil"/>{{ gab.author }}
-                                <div class="position-absolute" style="margin-bottom: -1rem"> * </div>
+                                     alt="Photo de profil"/>{{ gab.author }}
                             </h5>
+                            {% if gab.author.isPremium == 1 %}
+                                <p>*</p>
+                            {%  endif  %}
                         </a>
                         <p class="card-text">{{ gab.message }}</p>
                         <div class="text-end">
-                            <a href="{{ path('app_new_like', {'id': gab.id,'value': 1}) }}"
-                               class="btn btn-primary">like</a>
-                            <a href="{{ path('app_new_like', {'id': gab.id,'value': 2}) }}" class="btn btn-primary">dislike</a>
+                            <p class="card-text">{{ gab.createdAt|date('Y-m-d') }}</p>
+                            {% if app.user %}
+                                <a href="{{ path('app_new_like', {'id': gab.id,'value': 1}) }}" class="btn btn-primary">like</a>
+                            {% else %}
+                                <a href="{{ path('app_login') }}" class="btn btn-primary">like</a>
+                            {% endif %}
+
+
+                            {% if app.user %}
+                                <a href="{{ path('app_new_like', {'id': gab.id,'value': 2}) }}" class="btn btn-primary">dislike</a>
+                            {% else %}
+                                <a href="{{ path('app_login') }}" class="btn btn-primary">dislike</a>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>

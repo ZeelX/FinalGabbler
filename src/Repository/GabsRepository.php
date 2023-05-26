@@ -39,19 +39,102 @@ class GabsRepository extends ServiceEntityRepository
         }
     }
 
+    //fonction de tri
+
     /**
      * @return Gabs[] Returns an array of Gabs objects
      */
+
     public function findByAuthorId($value): array
     {
         return $this->createQueryBuilder('g')
             ->andWhere('g.author = :val')
             ->setParameter('val', $value)
-            ->orderBy('g.id', 'ASC')
+            ->orderBy('g.createdAt', 'DESC')
             ->getQuery()
             ->getResult()
         ;
     }
+
+    public function requestCreatedAtDesc($value): array
+    {
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.author = :val')
+            ->setParameter('val', $value)
+            ->orderBy('g.createdAt', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function requestLikeAsc($value): array
+    {
+        return $this->createQueryBuilder('g')
+            ->join(
+                'App\Entity\UserLike' ,
+                'ul',
+                'g.id = ul.gabs_ref_id')
+            ->where('g.author = :valOne')
+            ->andWhere('ul.value = :valTwo')
+            ->setParameters(['valOne' => $value, 'valTwo' => 1])
+            ->groupBy('g.id','ul.value')
+            ->orderBy('count(ul.value)', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function requestLikeDesc($value): array
+    {
+        return $this->createQueryBuilder('g')
+            ->join(
+                'App\Entity\UserLike' ,
+                'ul',
+                'g.id = ul.gabs_ref_id')
+            ->where('g.author = :valOne')
+            ->andWhere('ul.value = :valTwo')
+            ->setParameters(['valOne' => $value, 'valTwo' => 1])
+            ->groupBy('g.id','ul.value')
+            ->orderBy('count(ul.value)', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function requestDislikAsc($value): array
+    {
+        return $this->createQueryBuilder('g')
+            ->join(
+                'App\Entity\UserLike' ,
+                'ul',
+                'g.id = ul.gabs_ref_id')
+            ->where('g.author = :valOne')
+            ->andWhere('ul.value = :valTwo')
+            ->setParameters(['valOne' => $value, 'valTwo' => 2])
+            ->groupBy('g.id','ul.value')
+            ->orderBy('count(ul.value)', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function requestDislikDesc($value): array
+    {
+        return $this->createQueryBuilder('g')
+            ->join(
+                'App\Entity\UserLike' ,
+                'ul',
+                'g.id = ul.gabs_ref_id')
+            ->where('g.author = :valOne')
+            ->andWhere('ul.value = :valTwo')
+            ->setParameters(['valOne' => $value, 'valTwo' => 2])
+            ->groupBy('g.id','ul.value')
+            ->orderBy('count(ul.value)', 'desc')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 
     /**
      * @throws \Doctrine\ORM\NonUniqueResultException

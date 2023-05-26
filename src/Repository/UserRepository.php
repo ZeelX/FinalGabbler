@@ -71,6 +71,21 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 //        ;
 //    }
 
+    public function findAllLinkedUser($idOwner)
+    {
+        return $this->createQueryBuilder('u')
+            ->select ('u.name')
+            ->join(
+                'App\Entity\UserInteraction' ,
+                'ui')
+            ->andWhere('u.id = ui.relatedUser')
+            ->andWhere('ui.listOwner = :val')
+            ->setParameter('val',$idOwner)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     public function findOneId($value): ?User
     {
         return $this->createQueryBuilder('u')
@@ -80,4 +95,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getOneOrNullResult()
         ;
     }
+
+
 }
