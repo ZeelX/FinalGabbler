@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/profil')]
-class HomeController extends AbstractController
+class UserController extends AbstractController
 {
     #[Route('/edit/{id}', name: 'app_edit_profil', methods: ['GET', 'POST'])]
 
@@ -41,11 +41,8 @@ class HomeController extends AbstractController
     #[Route('/view/{id}', name: 'app_user_profil')]
     public function seeProfil(UserRepository $ur, GabsRepository $gr,UserInteractionRepository $ui, $id): Response
     {
-
-        $friend = $ur->findAllLinkedUser($id);
-
         return $this->render('home/profilUser.html.twig', [
-            'controller_name' => 'HomeController',
+            'controller_name' => 'UserController',
             'profil' => $ur->findOneId($id),
             'gabs' =>  $gr->findByAuthorId($id),
             'allfollowed' => $ui->findAllLinkedUser($id)
@@ -58,22 +55,22 @@ class HomeController extends AbstractController
     {
 
         return $this->render('home/shop.html.twig', [
-            'controller_name' => 'HomeController',
+            'controller_name' => 'UserController',
             'profil' => $ur->findOneId($this->getUser()->getId()),
 
 
         ]);
     }
 
-    #[Route('/shop_verify/{id}', name: 'app_user_shop_verify')]
+    #[Route('/shop_verify/', name: 'app_user_shop_verify')]
     public function shopVerify(UserRepository $ur, User $user): Response
     {
-            $user->setDateStartSubscription(date_create('now'));
-            $user->setIsPremium(true);
+            $this->getUser()->setDateStartSubscription(date_create('now'));
+            $this->getUser()->setIsPremium(true);
 
 
         return $this->render('home/shopVerify.html.twig', [
-            'controller_name' => 'HomeController',
+            'controller_name' => 'UserController',
             'profil' => $ur->findOneId($this->getUser()->getId()),
 
 
@@ -85,7 +82,6 @@ class HomeController extends AbstractController
     {
         $currentUserId= $this->getUser()->getId();
         $friend = $ur->findAllLinkedUser($currentUserId);
-
 
         if ($value == 1) {
             $gabs = $gr->findByAuthorId($this->getUser()->getId());
@@ -99,16 +95,16 @@ class HomeController extends AbstractController
         if ($value == 4) {
             $gabs = $gr->requestLikeAsc($this->getUser()->getId());
         }
-        if ($value == 5) {
-            $gabs = $gr->requestDislikAsc($this->getUser()->getId());
-        }
-        if ($value == 6) {
-            $gabs = $gr->requestDislikDesc($this->getUser()->getId());
-        }
+//        if ($value == 5) {
+//            $gabs = $gr->requestDislikAsc($this->getUser()->getId());
+//        }
+//        if ($value == 6) {
+//            $gabs = $gr->requestDislikDesc($this->getUser()->getId());
+//        }
 
         return $this->render('home/profil.html.twig', [
             'me' => $currentUserId,
-            'controller_name' => 'HomeController',
+            'controller_name' => 'UserController',
             'profil' => $ur->findOneId($currentUserId),
             'gabs' =>  $gabs,
             'allfollowed' => $friend

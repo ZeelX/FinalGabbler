@@ -5,11 +5,11 @@
 {% block body %}
     <div class="row">
         <div class="col-3">
-            <h1>Mon profil</h1>
+            <h1>My profil</h1>
             {% if app.user.isPremium == true %}
-                <a class="btn btn-warning" href="{{ path('app_edit_profil', {'id': me }) }}"> modifier mon profil </a>
+                <a class="btn btn-warning" href="{{ path('app_edit_profil', {'id': me }) }}"> Modify my profil </a>
             {% else %}
-                <a class="btn btn-warning" href="{{ path('app_user_shop') }}"> modifier mon profil</a>
+                <a class="btn btn-warning" href="{{ path('app_user_shop') }}"> Modify my profil</a>
             {% endif %}
 
         </div>
@@ -20,16 +20,16 @@
             <a class="btn btn-success" href="{{ path('app_profil', {'value': 2}) }}"> date asc </a>
         </div>
         <div class="col-1">
-            <a class="btn btn-success" href="{{ path('app_profil', {'value': 3}) }}"> like Desc </a>
+            <a class="btn" href="{{ path('app_profil', {'value': 3}) }}"> like Desc </a>
         </div>
         <div class="col-1">
-            <a class="btn btn-success" href="{{ path('app_profil', {'value': 4}) }}"> like asc </a>
+            <a class="btn" href="{{ path('app_profil', {'value': 4}) }}"> like asc </a>
         </div>
         <div class="col-1">
-            <a class="btn btn-success" href="{{ path('app_profil', {'value': 5}) }}"> dislike Desc </a>
+            <a class="btn" href="{{ path('app_profil', {'value': 5}) }}"> dislike Desc </a>
         </div>
         <div class="col-1">
-            <a class="btn btn-success" href="{{ path('app_profil', {'value': 5}) }}"> dislike asc </a>
+            <a class="btn" href="{{ path('app_profil', {'value': 5}) }}"> dislike asc </a>
         </div>
     </div>
 
@@ -48,7 +48,9 @@
                 <div class="row justify-content-center">
                     {% for followed in allfollowed %}
                         <div class="row">
-                            {{ followed.name }}
+
+                            <a href {{ path('app_user_profil', {'id': followed.id}) }}>
+                                {{ followed.name }} </a>
                         </div>
 
                     {% else %}
@@ -66,13 +68,15 @@
 
                             <div class="card mb-3">
                                 <div class="card-body">
+                                    <img class="w-25" src="{{ asset('build/images/imgLambda.jpg') }}"
+                                         alt="Photo de profil"/>
                                     <h5 class="card-title">{{ gab.author }}</h5>
                                     <p class="card-text">{{ gab.message }}</p>
 
                                     <div class="text-end">
                                         <p class="card-text">{{ gab.createdAt|date('Y-m-d') }}</p>
-                                        {# <a href="{{ path('app_new_like', {'id': gab.id,'value': 1}) }}" class="btn btn-primary">like</a> #}
-                                        {# <a href="{{ path('app_new_like', {'id': gab.id,'value': 2}) }}" class="btn btn-primary">dislike</a> #}
+                                         <a href="{{ path('app_new_like', {'id': gab.id,'value': 1}) }}" class="btn btn-primary">like</a>
+                                         <a href="{{ path('app_new_like', {'id': gab.id,'value': 2}) }}" class="btn btn-primary">dislike</a>
                                     </div>
                                 </div>
                             </div>

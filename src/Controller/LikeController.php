@@ -23,7 +23,6 @@ class LikeController extends AbstractController
         if ($objectSearched == true) {
             $em->remove($objectSearched);
             $em->flush();
-
         }
 
         $like = new UserLike();

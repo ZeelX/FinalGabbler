@@ -12,16 +12,16 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 {% if app.user %}
-                    <li  class="nav-item btn"> <a class="btn btn-success" href="{{ path('app_profil', {'value': 1}) }}"> Mon profil </a></li>
+                    <li  class="nav-item btn"> <a class="btn btn-success" href="{{ path('app_profil', {'value': 1}) }}"> My profil </a></li>
                 {% else %}
-                    <li class="nav-item btn"><a class="btn btn-success" href="{{ path('app_login') }}"> Mon profil </a>
+                    <li class="nav-item btn"><a class="btn btn-success" href="{{ path('app_login') }}"> My profil </a>
                     </li>
                 {% endif %}
 
                 {% if app.user %}
-                    <li  class="nav-item btn"> <a class="btn btn-success" href="{{ path('app_user_shop') }}"> S'abonner </a></li>
+                    <li  class="nav-item btn"> <a class="btn btn-success" href="{{ path('app_user_shop') }}"> Subscribe </a></li>
                 {% else %}
-                    <li class="nav-item btn"><a class="btn btn-success" href="{{ path('app_login') }}"> S'abonner </a>
+                    <li class="nav-item btn"><a class="btn btn-success" href="{{ path('app_login') }}"> Subscribe </a>
                     </li>
                 {% endif %}
 

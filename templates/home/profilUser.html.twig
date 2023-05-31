@@ -12,17 +12,17 @@
 
             <div class="row">
                 {% if app.user %}
-                     <a class="btn btn-primary" href="{{ path('app_user_interaction', {'id': profil.id,'value': 1}) }}"> S'abonner</a>
+                     <a class="btn btn-primary" href="{{ path('app_user_interaction', {'id': profil.id,'value': 1}) }}"> Follow</a>
                {% else %}
-                    <a class="btn btn-primary" href="{{ path('app_login') }}"> S'abonner </a>
+                    <a class="btn btn-primary" href="{{ path('app_login') }}"> Follow </a>
                 {% endif %}
             </div>
 
             <div class="row">
                 {% if app.user %}
-                    <a class="btn btn-dark" href="{{ path('app_user_interaction', {'id': profil.id,'value': 2}) }}"> Bloquer</a>
+                    <a class="btn btn-dark" href="{{ path('app_user_interaction', {'id': profil.id,'value': 2}) }}"> Black List</a>
                 {% else %}
-              <a class="btn btn-dark" href="{{ path('app_login') }}"> Bloquer </a>
+              <a class="btn btn-dark" href="{{ path('app_login') }}"> Black List </a>
                 {% endif %}
 
             </div>

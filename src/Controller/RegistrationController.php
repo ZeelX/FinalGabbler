@@ -7,7 +7,7 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
-use App\Services\tokenGenerator;
+use App\Service\tokenGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,8 +40,10 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
+            $suffix = "GabblerSuffixForSecurity";
             $user->setPassword(
-                $userPasswordHasher->hashPassword(
+
+               $userPasswordHasher->hashPassword(
                     $user,
                     $form->get('plainPassword')->getData()
                 )
@@ -50,15 +52,6 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $token = $tokenGenerator->generateToken();
-            $newToken = new ConfirmMailToken();
-            $newToken->setToken($token);
-            $newToken->setRelation($user);
-
-            $entityManager->persist($newToken);
-            $entityManager->flush();
-
-
 //             generate a signed url and email it to the user
               $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
@@ -66,7 +59,6 @@ class RegistrationController extends AbstractController
                     ->to($user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
-                    ->context(['token' => $token])
             );
             // do anything else you need here, like send an email
 

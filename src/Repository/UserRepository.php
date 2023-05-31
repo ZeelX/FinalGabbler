@@ -74,7 +74,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function findAllLinkedUser($idOwner)
     {
         return $this->createQueryBuilder('u')
-            ->select ('u.name')
+            ->select ('u.name, u.id')
             ->join(
                 'App\Entity\UserInteraction' ,
                 'ui')

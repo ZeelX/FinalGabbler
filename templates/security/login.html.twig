@@ -5,14 +5,34 @@
 {% block body %}
     <div class="row">
 
-        <div class="offset-1 col-3">
-            <p class="alreadyHave">You didn't have account yet ? </p>
+        <div class="offset-4 col-2">
+            <p class="alreadyHave">You didn't have account ? </p>
             <a class="btn btn-primary" href="{{ path('app_register') }}"> sign up </a>
         </div>
-    </div>
-    <div class="offset-5 col-2">
 
-        <form method="post">
+
+        <div class=" col-2 text-end">
+
+            {% for message in app.flashes('danger') %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            <form action="{{ path('app_discord') }}" method="post">
+                <p class="alreadyHave">Connexion by Discord </p>
+
+                <input type="hidden" name="token" value="{{ csrf_token('discord-auth') }}">
+                <button class="btn btn-primary" type="submit">
+                   connexion
+                </button>
+            </form>
+        </div>
+
+    </div>
+    <div class="offset-5 col-2 mt-3">
+
+        <form class="text-center" method="post">
             {% if error %}
                 <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
             {% endif %}
@@ -35,20 +55,18 @@
                    value="{{ csrf_token('authenticate') }}"
             >
 
-            {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
-
             <div class="checkbox mb-3">
                 <label>
                     <input type="checkbox" name="_remember_me"> Remember me
                 </label>
             </div>
-            #}
+
 
             <button class="btn btn-lg btn-success" type="submit">
                 Sign in
             </button>
         </form>
+
     </div>
+
 {% endblock %}

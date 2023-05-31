@@ -24,8 +24,6 @@ class GabsController extends AbstractController
     #[Route('/new', name: 'app_gabs_new', methods: ['GET', 'POST'])]
     public function new(Request $request, GabsRepository $gabsRepository): Response
     {
-        $currentUser = $this->getUser();
-
         $gab = new Gabs();
         $gab->setAuthor($this->getUser());
         $gab->setCreatedAt(new \DateTime('now'));

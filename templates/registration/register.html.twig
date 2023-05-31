@@ -3,14 +3,33 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-        <div class="row">
-            <div class="offset-1 col-3">
+    <div class="row">
+
+        <div class="offset-4 col-2 ">
             <p class="alreadyHave">You already have account?</p>
             <a class="btn btn-success" href="{{ path('app_login') }}"> sign in </a>
-            </div>
-
         </div>
-    <div class="offset-5 col-2">
+
+
+        <div class="col-2 text-end">
+
+            {% for message in app.flashes('danger') %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            <form action="{{ path('app_discord') }}" method="post">
+                <p class="alreadyHave">Connexion by Discord </p>
+
+                <input type="hidden" name="token" value="{{ csrf_token('discord-auth') }}">
+                <button class="btn btn-primary" type="submit">
+                    connexion
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="offset-5 col-2 mt-3 text-center">
 
     {% for flash_error in app.flashes('verify_email_error') %}
             <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
@@ -20,6 +39,7 @@
 
         {{ form_start(registrationForm) }}
         {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.name) }}
         {{ form_row(registrationForm.plainPassword, {
             label: 'Password'
         }) }}

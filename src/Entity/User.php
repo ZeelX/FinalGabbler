@@ -59,6 +59,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateStartSubscription = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $accessToken = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $discordId = null;
+
     public function __construct()
     {
         $this->gabsList = new ArrayCollection();
@@ -298,6 +304,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDateStartSubscription(?\DateTimeInterface $dateStartSubscription): self
     {
         $this->dateStartSubscription = $dateStartSubscription;
+
+        return $this;
+    }
+
+    public function getAccessToken(): ?string
+    {
+        return $this->accessToken;
+    }
+
+    public function setAccessToken(?string $accessToken): self
+    {
+        $this->accessToken = $accessToken;
+
+        return $this;
+    }
+
+    public function getDiscordId(): ?int
+    {
+        return $this->discordId;
+    }
+
+    public function setDiscordId(?int $discordId): self
+    {
+        $this->discordId = $discordId;
 
         return $this;
     }
