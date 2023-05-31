@@ -51,6 +51,7 @@ class DiscordController extends AbstractController
         if (!$accessToken){
             return $this->render('discord/check.html.twig');
         }
+
         $discordUser = $this->discordApiService->fetchUser($accessToken);
         $user = $userRepository->findOneBy(['discordId' =>$discordUser->id]);
         if ($user){
