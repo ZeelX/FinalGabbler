@@ -63,7 +63,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $accessToken = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $discordId = null;
+    private ?string $discordId = null;
 
     public function __construct()
     {
@@ -121,7 +121,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }

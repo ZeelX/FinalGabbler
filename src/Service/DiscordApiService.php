@@ -28,7 +28,7 @@ class DiscordApiService
             'redirect_uri' => $this->redirectUri,
             'response_type' => 'token',
             'scope' => implode(' ', $scope),
-            'prompt' =>'none' ]);
+            'prompt' => 'none' ]);
         return self::AUTHORIZATION_URI. '?' .$queryParameters;
     }
 

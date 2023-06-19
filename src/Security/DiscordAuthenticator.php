@@ -36,15 +36,17 @@ class DiscordAuthenticator extends AbstractAuthenticator
         if (!$this->isValidRequest($request)){
             throw new AuthenticationException('Invalide request');
         }
+
         $accessToken = $request->query->get('accessToken');
+
         if (!$accessToken){
             throw new AuthenticationException('No access token provided');
         }
 
-        $user = $this->userRepository->findOneId(['accessToken' => $accessToken]);
+        $user = $this->userRepository->findOneBy(['accessToken' => $accessToken]);
 
         if (!$user){
-            throw new AuthenticationException('wrong access token');
+            throw new AuthenticationException('Wrong access token');
         }
 
         $userBadge = new UserBadge($user->getUserIdentifier(), function() use ($user){
